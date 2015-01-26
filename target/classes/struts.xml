@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.ui.templateDir" value="template" />
+	<constant name="struts.ui.templateSuffix" value="ftl" />
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+	
+	<!-- <constant name="struts.i18n.encoding"  value="GBK"/> struts系统默认是utf-8-->
+
+	<!-- 当没有 指定spring装配策略时，下面的loginAction实际上是一个”伪“类，对应的时applicationcontext.xml中的某个bean的id-->
+		<!-- <action name="Login" class="loginAction"> -->
+		
+		<!-- 当使用spring的自动装配策略时，”自动装配“是指本struts.xml文件内的实际action对象，其源代码内部的”持 有对象“与applicationcontext.xml中的对象通
+		过相同的名称进行匹配，而不是 说applicationcontext.xml中的bean与bean之间进行匹配。-->
+
+        <!-- 比如本配置文件中的class="net.njiajia.model.LoginAction"文件源码中就有一个：private LoginService loginservice;这个属性最終就需要 spring来注入。
+        struts框架解析此文件时，对此属性的处理就会交给struts-spring插件，此插件就会到applicationcontext.xml中去找寻id为loginservice的bean
+
+		<action name="Login" class="net.njiajia.model.LoginAction">
+			<result name="success">/success.jsp</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		-->
+	<package name="zeng" extends="struts-default">
+	
+<!-- 		<interceptors>验证用户的session是否过期
+			<interceptor name="authority" class="net.njiajia.edu.action.interceptor.AuthorityInterceptor"/>
+			<interceptor-stack name="Stack_1">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="authority"/>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="Stack_1"/> -->
+		
+		<default-action-ref name="first"></default-action-ref>
+		
+		<global-results>
+			<result name="login">/WEB-INF/houtai/login.jsp</result>
+			<result name="exception">/WEB-INF/jsp/error.jsp</result>
+		</global-results>
+		
+		
+		<global-exception-mappings>
+			<exception-mapping exception="net.njiajia.edu.exception.My_Exception" result="exception"/>
+			<exception-mapping exception="java.lang.Exception" result="exception"/>
+		</global-exception-mappings>
+		
+
+		
+		
+		<action name="first">
+			<result name="success">/WEB-INF/jsp/index.jsp</result>
+		</action>
+		
+		<action name="houtai">
+			<result name="success">/WEB-INF/houtai/login.jsp</result>
+		</action>
+		
+		<!-- 用户提交的processLogin请求转交给 LoginAction类进行处理-->
+		<action name="houtai_proLogin" class="net.njiajia.edu.action.LoginAction">
+			<!-- <result name="input">/WEB-INF/jsp/login.jsp</result>  -->
+			<result name="success">/WEB-INF/houtai/index.jsp</result>
+			<result name="failure">/WEB-INF/houtai/dealwith.jsp</result>
+
+			<interceptor-ref name="defaultStack"/>
+			
+		</action>
+		
+		<action name="houtai_loginout" class="net.njiajia.edu.action.LoginOutAction">
+			<result name="success">/WEB-INF/houtai/login.jsp</result>
+		</action>
+		
+		
+		
+		
+<!-- 后台 对用户的增、删、改、查 -->	
+			
+		<action name="houtai_user_all" class="net.njiajia.edu.action.AllUserListAction">
+			<result name="success">/WEB-INF/houtai/alluser.jsp</result>
+		</action>
+		<action name="houtai_user_addnew">
+			<result name="success">/WEB-INF/houtai/user_addnew.jsp</result>
+		</action>
+		<action name="houtai_pro_user_addnew" class="net.njiajia.edu.action.AddNewUserAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_user_all</param>
+			</result>
+		</action>
+		<action name="houtai_user_edit" class="net.njiajia.edu.action.EditUserAction">
+			<result name="success">/WEB-INF/houtai/user_edit.jsp</result>
+		</action>
+		<action name="houtai_pro_user_edit" class="net.njiajia.edu.action.updateUserAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_user_all</param>
+			</result>
+		</action>
+		<action name="houtai_user_delete" class="net.njiajia.edu.action.deleteUserAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_user_all</param>
+			</result>
+		</action>
+		
+		
+
+		
+		
+<!-- 后台 对分类的增、删、改、查 -->
+		
+		<action name="houtai_category_all" class="net.njiajia.edu.action.AllCategoryListAction">
+			<result name="success">/WEB-INF/houtai/category_all.jsp</result>
+		</action>
+		<action name="houtai_category_addnew" >
+			<result name="success">/WEB-INF/houtai/category_addnew.jsp</result>
+		</action>
+		<action name="houtai_pro_category_addnew" class="net.njiajia.edu.action.AddNewCategoryAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_category_all</param>
+			</result>
+		</action>
+		<action name="houtai_category_edit" class="net.njiajia.edu.action.EditCategoryAction">
+			<result name="success">/WEB-INF/houtai/category_edit.jsp</result>
+		</action>
+		<action name="houtai_pro_category_edit" class="net.njiajia.edu.action.updateCategoryAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_category_all</param>
+			</result>
+		</action>
+		<action name="houtai_category_delete" class="net.njiajia.edu.action.deleteCategoryAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_category_all</param>
+			</result>
+		</action>
+		
+		
+		
+		
+		
+		
+<!-- 后台 对文档的增、删、改、查 -->		
+		
+		<action name="houtai_document_all" class="net.njiajia.edu.action.AllDocumentListAction">
+			<result name="success">/WEB-INF/houtai/document_all.jsp</result>
+		</action>		
+		<action name="houtai_document_addnew" class="net.njiajia.edu.action.addNewDocumentQueryCategoryAction">
+			<result name="success">/WEB-INF/houtai/document_addnew.jsp</result>
+		</action>
+		<action name="houtai_pro_document_addnew" class="net.njiajia.edu.action.AddNewDocumentAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_document_all</param>
+			</result>
+		</action>
+		<action name="houtai_document_edit" class="net.njiajia.edu.action.EditDocumentAction">
+			<result name="success">/WEB-INF/houtai/document_edit.jsp</result>
+		</action>
+		<action name="houtai_pro_document_edit" class="net.njiajia.edu.action.updateDoumentAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_document_all</param>
+			</result>
+		</action>
+		<action name="houtai_document_delete" class="net.njiajia.edu.action.deleteDocumentAction">
+			<result name="success" type="chain">
+				<param name="actionName">houtai_document_all</param>
+			</result>
+		</action>
+		<action name="houtai_document_view" class="net.njiajia.edu.action.viewDocumentAction">
+			<result name="success">/WEB-INF/houtai/document_view.jsp</result>
+		</action>
+		
+
+
+		
+
+		
+<!--点首页上的绿色搜索，可进入搜索功能 -->		
+		<action name="search3" class="net.njiajia.edu.action.Lucene_Page_Search_ListAction">
+			<result name="success">/WEB-INF/jsp/searchReslut_list_all.jsp</result>
+		</action>
+		
+<!--专门的搜索页  -->
+		<action name="search">
+			<result name="success">/WEB-INF/jsp/search.jsp</result>	
+		</action>	
+		
+<!-- 在搜索框输了关键字点提交后，页面上的提交代码会指定进入下面的这个action，这个action会调用service中的方法 -->
+		<action name="search2" class="net.njiajia.edu.action.Search2Action">
+			<result name="success">/WEB-INF/jsp/searchReslut.jsp</result>	
+		</action>
+		<action name="proSearchContent" class="net.njiajia.edu.action.SearchContentAction">
+			<result name="success">/WEB-INF/jsp/searchReslut.jsp</result>	
+		</action>
+<!-- 实验用过的		<action name="search2" class="net.njiajia.edu.action.Search2Action">
+			<result name="success">/WEB-INF/jsp/searchReslut.jsp</result>	
+		</action> -->
+
+		
+		
+
+<!--供采集程序用  -->
+		<action name="addDocument">
+			<result name="success">/WEB-INF/jsp/adddocument.jsp</result>	
+		</action>
+		<action name="proAddDocument" class="net.njiajia.edu.action.AddDocumentAction">
+			<result name="success">/WEB-INF/jsp/adddocument.jsp</result>
+		</action>
+		<action name="proDocumentList" class="net.njiajia.edu.action.DocumentListAction">
+			<result name="success">/WEB-INF/jsp/document_list_all.jsp</result>
+		</action>
+		
+<!--前台显示用  -->		
+		<action name="category" class="net.njiajia.edu.action.CategoryListAction">
+			<result name="success">/WEB-INF/jsp/document_list_all.jsp</result>
+		</action>
+		<action name="documentview" class="net.njiajia.edu.action.viewDocumentAction">
+			<result name="success">/WEB-INF/jsp/document_view.jsp</result>
+		</action>
+
+
+		
+
+		
+		
+		
+
+		
+
+
+	</package>
+
+</struts>
